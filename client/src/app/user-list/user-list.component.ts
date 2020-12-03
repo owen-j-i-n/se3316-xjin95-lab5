@@ -37,4 +37,18 @@ export class UserListComponent implements OnInit {
       }
     })
   }
+  change_user(user,state,role){
+    this.$http.get(`http://127.0.0.1:3000/change_user?user_id=${user._id}&state=${state}&role=${role}`).subscribe((resp)=>{
+      if(resp["code"]=="0"){
+        this.notification.create("success","Change User State Successfully","good！");
+        user.state = state;
+        user.role = role;
+      }
+      else{
+        this.notification.create("error","Error",resp["message"]);
 
+      }
+    })
+  }
+
+}
