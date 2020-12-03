@@ -158,7 +158,7 @@ const register = async function (req, res, next) {
         newUserInfo.save().then( (result)=> {
           let token = jwt.sign({username:username},config.JWT_SECRET,{expiresIn:config.JWT_EXPIRY});
            mailTransporter.sendMail({
-            from:"1919833917@qq.com",
+            from:"1034275785@qq.com",
             to:email,
             subject:"Activate your account",
             html:`<b>Please click <a href=http://127.0.0.1:3000/activate_account/?token=${token}>here</a>  to activate your account</b> `
@@ -169,11 +169,11 @@ const register = async function (req, res, next) {
           })
         }).catch(error => {
           
-          return res.send({ success: true, code: 0, message: '注册失败！error:' + error });
+          return res.send({ success: true, code: 0, message: 'fail！error:' + error });
         })
       }
     } catch (error) {
-      return res.send({ success: true, code: 0, message: '注册失败！error:' + error })
+      return res.send({ success: true, code: 0, message: 'fail！error:' + error })
     }
   
 }
