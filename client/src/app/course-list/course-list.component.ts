@@ -94,7 +94,7 @@ export class CourseListComponent implements OnInit {
   deleteCourseList(courseList_id){
     this.$http.get(`http://127.0.0.1:3000/delete_courseList?courseList_id=${courseList_id}&token=${localStorage.getItem("token")}`).subscribe((resp) => {
       if(resp["code"]=="0"){
-        this.notification.create("success","Delete Successfully","er...... do you remember what have changed(((φ(◎ロ◎;)φ)))");
+        this.notification.create("success","Delete Successfully","changed");
 
         var index = this.courseLists.findIndex(courseList=>courseList._id == courseList_id);
         console.log(index);
@@ -170,7 +170,7 @@ export class CourseListComponent implements OnInit {
         if(resp["code"]=="0"){
           this.CourseList_loading = false;
           this.CourseList_visible = false;
-          this.notification.create("success","Edit Successfully","er...... do you remember what have changed(((φ(◎ロ◎;)φ)))");
+          this.notification.create("success","Edit Successfully","changed");
           
 
         }
@@ -186,7 +186,7 @@ export class CourseListComponent implements OnInit {
         if(resp["code"]=="0"){
           this.CourseList_loading = false;
           this.CourseList_visible = false;
-          this.notification.create("success","Add Successfully","er...... do you remember what have changed(((φ(◎ロ◎;)φ)))");
+          this.notification.create("success","Add Successfully","changed");
         }
         else{
           this.notification.create("error","Error",resp["message"]);
