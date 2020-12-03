@@ -1,0 +1,32 @@
+
+.index-nav:hover {
+    box-shadow: 0 20px 30px -10px rgba(0, 0, 0, .1);
+}
+
+.index-nav {
+    margin-bottom: 25px;
+    color: #666;
+    -webkit-animation-duration: .5s;
+    animation-duration: .5s;
+    -webkit-animation-fill-mode: both;
+    animation-fill-mode: both;
+    box-shadow: 0 0 6px rgba(0, 0, 0, .1);
+    transition: all .2s ease-in-out;
+    background-color: white;
+}
+
+.logo-container{
+    width: 50%;
+    display:flex;
+    justify-content: left;
+}
+.nav-link{
+    font-size: 18px;
+    margin-left: 30px;
+    align-self: center;
+
+}
+.logo{
+    height: 60px;
+    margin: 5px 10px 5px 10px;
+}

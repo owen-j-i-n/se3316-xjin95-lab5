@@ -1,0 +1,116 @@
+<div style="width: 90%;margin: auto;padding: 20px;background-color: white;border-radius: 5px; margin-bottom: 30px;">
+  <div>
+    <h1 style="text-align: right;">Courses Table</h1>
+  </div>
+
+  <div style="margin-bottom: 20px;">
+    <div style="border-bottom: 1px solid rgb(233, 233, 233);padding-bottom: 15px;">
+      <label nz-checkbox [(ngModel)]="allChecked" (ngModelChange)="updateAllChecked()"
+        [nzIndeterminate]="indeterminate">
+        Check all
+      </label>
+    </div>
+    <br />
+    <nz-checkbox-group [(ngModel)]="checkOptionsOne" (ngModelChange)="updateSingleChecked()"></nz-checkbox-group>
+    <br>
+    <br>
+    <div style="margin-bottom: 30px;">
+      <nz-input-group nzSearch nzSize="large" >
+          <input type="text" nz-input placeholder="Input keywords with length ≥ 4"   [(ngModel)]="search_keywords" />
+        </nz-input-group>
+        <!-- <ng-template #suffixButton>
+          <button nz-button nzType="primary" nzSize="large" nzSearch (click)="search_courses()">Search</button>
+        </ng-template> -->
+  </div>
+  </div>
+
+
+  <nz-table #nestedTable [nzData]="course_list_show" [nzPageSize]="10" [nzLoading]="!course_list_loaded">
+    <thead>
+      <tr>
+        <th></th>
+        <th>subject</th>
+        <th>catalog_nbr</th>
+        <th>className</th>
+        <th>class_section</th>
+        <th>ssr_component</th>
+        <th>time table</th>
+      </tr>
+    </thead>
+    <tbody>
+      <ng-template ngFor let-data [ngForOf]="nestedTable.data">
+        <tr>
+          <td [(nzExpand)]="data.expand"></td>
+          <td>{{ data.subject }}</td>
+          <td>{{ data.catalog_nbr }}</td>
+          <td>{{ data.className }}</td>
+          <td>{{ data.course_info[0].class_section }}</td>
+          <td>{{ data.course_info[0].ssr_component}}</td>
+          <td>
+            days:{{ data.course_info[0].days.toString()+"  "}}
+            <br>
+            start time:{{data.course_info[0].start_time}}
+            <br>
+            end_time:{{data.course_info[0].end_time}}
+          </td>
+        </tr>
+        <tr [nzExpand]="data.expand">
+          <nz-table #innerTable [nzData]="[data]" nzSize="middle" [nzShowPagination]="false">
+            <thead>
+              <tr>
+                <th>class_nbr</th>
+                <th>descrlong</th>
+                <th>campus</th>
+                <th>facility_ID</th>
+                <th>instructors</th>
+                <th>enrl_stat</th>
+                <th>descr</th>
+                <th style="max-width: 30%;">catalog_description</th>
+              </tr>
+            </thead>
+    <tbody>
+      <tr *ngFor="let data of innerTable.data">
+        <td>{{ data.course_info[0].class_nbr }}</td>
+        <td>{{ data.course_info[0].descrlong||"None" }}</td>
+        <td>{{ data.course_info[0].campus }}</td>
+        <td>{{ data.course_info[0].facility_ID }}</td>
+        <td>{{ data.course_info[0].instructors.toString() }}</td>
+        <td>{{ data.course_info[0].enrl_stat }}</td>
+        <td>{{ data.course_info[0].descr }}</td>
+        <td>{{ data.catalog_description }} </td>
+      </tr>
+    </tbody>
+  </nz-table>
+
+  <div>
+
+    <h2>Reviews</h2>
+    <div  *ngFor="let review of data.reviews" style="margin-left: 30px;">
+      <div *ngIf="review.hidden=='no' || userInfo.role=='admin'" style="display: flex;justify-content: space-between;">
+        <div>
+          <div class="review_head">
+            <h3 style="font-weight: bolder;">{{review.user.name}} </h3>
+          </div>
+          <div class="review_body" style="padding-left: 30px;">
+            <p >{{review.content}} </p>
+          </div>
+          <div class="review_footer">
+            <p style="font-size: 12px;">{{dateFormat(review.ctime)}} </p>
+          </div>
+        </div>
+
+        <div *ngIf="userInfo.role=='admin'">
+          <button *ngIf="review.hidden=='no'" nz-button [nzSize]="'small'" nzDanger (click)="hidden_Review(review,data._id,'yes')" nzType="primary">Mark as Hidden</button>
+          <button *ngIf="review.hidden=='yes'" nz-button [nzSize]="'small'" (click)="hidden_Review(review,data._id,'no')" nzType="primary">Show it</button>
+          
+        </div>
+
+      </div>
+      
+    </div>
+  </div>
+  </tr>
+  </ng-template>
+  </tbody>
+  </nz-table>
+</div>

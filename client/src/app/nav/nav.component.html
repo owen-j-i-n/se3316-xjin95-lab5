@@ -1,0 +1,36 @@
+<div class="index-nav">
+    <a  *ngIf="user.username==''"
+       style="float: right;position: relative;right: 30px;top: 25px;text-decoration: none;"
+       [routerLink]="['/login']"
+       >
+       signin
+    </a>
+    <a href="#" *ngIf="user.username!=''" (click)="signout()"
+       style="float: right;position: relative;right: 30px;top: 25px;text-decoration: none; margin-left: 30px;">
+       signout
+    </a>
+    <a href="#" *ngIf="user.username" style="float: right;position: relative;right: 30px;top: 25px;text-decoration: none;">
+       {{user.username}}
+    </a>
+  
+    <div class="logo-container">
+       <img class="logo">
+       <div style="align-self: center;font-size: 25px;font-family: xingshu;">TimeTables</div>
+       
+       
+        <button class="nav-link" nz-button [nzSize]="'large'" [routerLink]="['/']"  nzType="link"  (click)="change_anchor('home')">
+          Home
+        </button>
+  
+        <button class="nav-link" nz-button [nzSize]="'large'"  nzType="link" [routerLink]="['/courseList']"  (click)="change_anchor('course_list')">
+          Course List
+          
+        </button>
+        <button class="nav-link" *ngIf = "user.role=='admin'"  [routerLink]="['/admin']" nz-button [nzSize]="'large'" nzType="link"  (click)="change_anchor('admin')">
+          Admin
+        </button>
+        
+       
+        
+    </div>
+  </div>

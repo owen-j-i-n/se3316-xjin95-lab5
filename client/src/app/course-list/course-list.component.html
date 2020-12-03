@@ -1,0 +1,141 @@
+<app-nav [user]="userInfo"></app-nav>
+
+
+<div style="width: 90%;margin: auto;background-color: white;padding: 20px;border-radius: 5px; margin-bottom: 30px;">
+  <div style="display: flex;justify-content: space-between;">
+    <button *ngIf="userInfo.username" nz-button nzType="primary" style="top:5px" (click)="open_addCourseListModal()"
+     nzShape="round"><i nz-icon nzType="plus-circle"></i>Add Course List</button>
+    <h1 style="text-align: right;">CourseLists Table</h1>
+  </div>
+  
+
+  <div *ngIf="userInfo.username">
+    <label nz-checkbox (ngModelChange)= "change_own($event)" [ngModel]="show_my_own" style="font-size: 16px;margin: 0 0 20px 20px;">show my courseList</label>
+  </div>
+
+  <nz-table #nestedTable [nzData]="courseLists_show" [nzPageSize]="10" [nzLoading]="!courseLists_load">
+    <thead>
+      <tr>
+        <th></th>
+        <th>Name</th>
+        <th>Creator</th>
+        <th>Number of courses</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      <ng-template ngFor let-data [ngForOf]="nestedTable.data">
+        <tr>
+          <td [(nzExpand)]="data.expand">
+              
+          </td>
+          <td>{{ data.name }}</td>
+          <td>{{ data.creator.name }}</td>
+          <td>{{ data.course_IDs.length }}</td>
+          <td *ngIf="data.self || userInfo.role=='admin'">
+            <a style="margin-right: 20px;" (click)="open_editCourseListModal(data)">Edit</a>
+            <a nz-popconfirm nzPopconfirmTitle="Sure to delete?" (nzOnConfirm)="deleteCourseList(data._id)" style="color: red;">Delete</a>
+          </td>
+          
+        </tr>
+        <tr [nzExpand]="data.expand">
+          
+          <nz-table #innerTable [nzData]="data.course_list" nzSize="middle" [nzShowPagination]="false">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Description</th>
+                <th>Timetable</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let course of innerTable.data">
+                <td>{{ course.catalog_nbr }}</td>
+                <td style="width: 50%;">{{ course.catalog_description }}</td>
+                <td>days:{{ course.course_info[0].days.toString()+"  "}}
+                    <br>
+                    start time:{{course.course_info[0].start_time}}
+                    <br>
+                    end_time:{{course.course_info[0].end_time}}
+                </td>
+                <td>
+                  <a *ngIf="userInfo.username" (click)="(cur_Review_CourseList_id = course._id) && (addReview_visible=true)">Add Review</a>
+                </td>
+              </tr>
+              
+            </tbody>
+            </nz-table>
+
+  
+          </tr>
+      </ng-template>
+    </tbody>
+  </nz-table>
+
+  <nz-modal [(nzVisible)]="addReview_visible" nzTitle="Add Review" 
+  (nzOnCancel)="addReview_visible = false" (nzOnOk)="saveReview()"
+  [nzOkLoading]="addReview_loading">
+    <textarea rows="4" nz-input [(ngModel)]="current_Review"></textarea>
+  </nz-modal>
+
+
+  <nz-modal
+      [(nzVisible)]="CourseList_visible"
+      nzTitle="Edit CourseList"
+      (nzOnCancel)="CourseList_visible=false"
+      (nzOnOk)="saveCourseList()"
+      [nzOkLoading]="CourseList_loading"
+    >
+    <form nz-form [formGroup]="validateForm" (ngSubmit)="submitForm(validateForm.value)">
+      <nz-form-item>
+        <nz-form-label [nzSpan]="7" nzRequired>Name</nz-form-label>
+        <nz-form-control [nzSpan]="12" nzHasFeedback nzValidatingTip="Validating..." [nzErrorTip]="userErrorTpl">
+          <input nz-input formControlName="Name" placeholder="Please input the courseList name" />
+          <ng-template #userErrorTpl let-control>
+            <ng-container *ngIf="control.hasError('required')">
+              Please input your username!
+            </ng-container>
+            <ng-container *ngIf="control.hasError('duplicated')">
+              The username is redundant!
+            </ng-container>
+          </ng-template>
+        </nz-form-control>
+      </nz-form-item>
+
+      <nz-form-item>
+        <nz-form-label [nzSpan]="7" nzRequired>Visibility</nz-form-label>
+        <nz-form-control [nzSpan]="12" >
+          
+          <nz-switch formControlName="visibility"  nzCheckedChildren="public" nzUnCheckedChildren="private"></nz-switch>
+        </nz-form-control>
+      </nz-form-item>
+
+      <nz-form-item>
+        <nz-form-label [nzSpan]="7" nzRequired>Courses</nz-form-label>
+        <nz-form-control [nzSpan]="18" nzHasFeedback nzErrorTip="Please select your course!">
+          <!-- <input nz-input type="password" formControlName="password" (ngModelChange)="validateConfirmPassword()" /> -->
+          <nz-select nzMode="multiple" nzPlaceHolder="Please select" [nzOptions]="listOfOption" formControlName="courses" > </nz-select>
+        </nz-form-control>
+      </nz-form-item>
+
+      
+
+      <nz-form-item>
+        <nz-form-label [nzSpan]="7" nzRequired>Description</nz-form-label>
+        <nz-form-control [nzSpan]="12" nzErrorTip="Please write Description here!">
+          <textarea formControlName="descr" nz-input rows="2" placeholder="write any thing"></textarea>
+        </nz-form-control>
+      </nz-form-item>
+
+      <nz-form-item>
+        <nz-form-control [nzOffset]="7" [nzSpan]="12">
+          <!-- <button nz-button nzType="primary" [disabled]="!validateForm.valid">Submit</button> -->
+          <button nz-button (click)="resetForm($event)">Reset</button>
+        </nz-form-control>
+      </nz-form-item>
+    </form>
+    </nz-modal>
+
+  
+</div>

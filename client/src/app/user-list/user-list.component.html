@@ -1,0 +1,49 @@
+<app-nav [user]="userInfo"></app-nav>
+
+<div style="width: 90%;margin: auto;padding: 20px;background-color: white;border-radius: 5px; margin-bottom: 30px;">
+    <div>
+      <h1 style="text-align: right;">User Table</h1>
+    </div>
+  
+  
+  
+    <nz-table #nestedTable [nzData]="user_list" [nzPageSize]="10" [nzLoading]="!user_list_loaded">
+      <thead>
+        <tr>
+          <th>Username</th>
+          <th>E-mail</th>
+          <th>Login From</th>
+          <th>Role</th>
+          <th>State</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <ng-template ngFor let-data [ngForOf]="nestedTable.data">
+          <tr>
+
+            <td>{{ data.username }}</td>
+            <td>{{ data.email }}</td>
+            <td>{{ data.from }}</td>
+            <td>{{ data.role }}</td>
+            
+            <td>
+                <nz-tag nzColor="processing" *ngIf="data.state=='active'">active </nz-tag>
+                <nz-tag nzColor="error" *ngIf="data.state=='deactive'">deactive</nz-tag>
+              
+            </td>
+            <td>
+                <a nz-button nzType="link" *ngIf="data.state=='deactive'" (click)="change_user(data,'active','user')"  >Activate the user</a>
+                <a nz-button nzType="link" *ngIf="data.state=='active'" (click)="change_user(data,'deactive','user')" nzDanger >Deactivate the user</a>
+                <br>
+                <a nz-button nzType="link" *ngIf="data.role!='admin'"  (click)="change_user(data,data.state,'admin')" >Grant site manager privilege</a>
+
+            </td>
+          </tr>
+
+
+        </ng-template>
+      </tbody>
+    </nz-table>
+  </div>
+  
