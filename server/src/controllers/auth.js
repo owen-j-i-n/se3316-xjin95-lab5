@@ -354,20 +354,6 @@ const change_user_state = async function(req,res,next){
   })
 }
 
-const get_users = async function(req,res,next){
-  if(!req.userInfo){
-    return res.send({"code":1,"message":"Access Deny"});
-  }
-  User.find({_id:{$ne:req.userInfo._id}},(err,docs)=>{
-    if(err){
-      
-      return res.send({"code":1,"message":err.toString()});
-    }
-    else{
-      return res.send({"code":0,user_list:docs});
-    }
-  })
-}
 
 
 
