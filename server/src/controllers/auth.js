@@ -60,14 +60,9 @@ const login = async function (req, res, next) {
           return res.send({ success: true, code: 0, message: 'The account is deactive,Please contack the administrator or check your email!' })
 
         }
-        // 生成token
+
         const token = GenerateToken(userInfo);
-        // res.cookie('authorization', token, {
-        //   httpOnly: true,
-          
-        //   maxAge:3600*1000
-        // })
-        // 存储token到redis
+
         return res.send({ success: true, code: 1, token: token, user: ReturnUserInfo(userInfo) })
       } else {
         return res.send({ success: true, code: 0, message: 'Wrong password' })
@@ -158,7 +153,7 @@ const register = async function (req, res, next) {
         newUserInfo.save().then( (result)=> {
           let token = jwt.sign({username:username},config.JWT_SECRET,{expiresIn:config.JWT_EXPIRY});
            mailTransporter.sendMail({
-            from:"1034275785@qq.com",
+            from:"1919833917@qq.com",
             to:email,
             subject:"Activate your account",
             html:`<b>Please click <a href=http://127.0.0.1:3000/activate_account/?token=${token}>here</a>  to activate your account</b> `
