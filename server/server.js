@@ -33,6 +33,7 @@ app.use(session({
     saveUninitialized: true
 }));
 
+
 app.use(passport.initialize());
 app.use(passport.session());
 app.use((req, res, next) => {
@@ -55,4 +56,4 @@ require('./src/routes/authRouter')(app);
 
 
 
-app.listen(port, () => console.log(`Example app listening on port ${port}!`))
+app.listen(port, () => console.log(`lab5 server listening on port ${port}!`))
