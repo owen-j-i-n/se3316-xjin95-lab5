@@ -133,6 +133,7 @@ export class CoursesComponent implements OnInit {
 
   hidden_Review(review,course_id,state){
     
+    
     this.$http.get(`http://127.0.0.1:3000/hide_review?review_id=${review._id}&course_id=${course_id}&state=${state}`).subscribe((resp)=>{
       if(resp["code"]==0){
         this.notification.create("success","Change Review State Successfully","good！");
@@ -147,16 +148,15 @@ export class CoursesComponent implements OnInit {
         
     });
   }
-
    dateFormat(msg){
     var date = new Date(msg)
     var year = date.getFullYear()
-    var month= (date.getMonth()+1).toString().padStart(2,'0')//padStart()是ES6的新方法，即设置字符串的长度，不足的用第二个参数补充
+    var month= (date.getMonth()+1).toString().padStart(2,'0')
     var day = (date.getDate()).toString().padStart(2,'0')
     var hour =date.getHours()
     var min = (date.getMinutes()).toString().padStart(2,'0')
     var second = (date.getSeconds()).toString().padStart(2,'0')
-    return `${year}-${month}-${day}  ${hour}:${min}:${second}`//这个不是单引号，而是tab键上面的键
+    return `${year}-${month}-${day}  ${hour}:${min}:${second}`
   }
   
 
