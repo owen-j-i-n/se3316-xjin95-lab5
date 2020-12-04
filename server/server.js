@@ -36,7 +36,7 @@ app.use(session({
 app.use(passport.initialize());
 app.use(passport.session());
 app.use((req, res, next) => {
-    req.passport = passport // 为了在中间件中可以调用到 passport
+    req.passport = passport 
     res.header('Access-Control-Allow-Origin', '*');
     res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
     res.header("Access-Control-Allow-Credentials",true);
