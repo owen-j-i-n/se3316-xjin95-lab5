@@ -52,3 +52,16 @@ export class LoginComponent implements OnInit {
       
     })
   }
+
+  constructor(private fb: FormBuilder, public $http: HttpClient,private notification:NzNotificationService) { }
+
+  ngOnInit(): void {
+    this.validateForm = this.fb.group({
+      password: [null, [Validators.required]],
+      remember: [true],
+      email:[null,[Validators.email,Validators.required]]
+    });
+  }
+
+}
+
