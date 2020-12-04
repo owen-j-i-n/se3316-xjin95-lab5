@@ -47,7 +47,7 @@ export class CourseListComponent implements OnInit {
     
 
 
-    //获取courses 和 courseLists
+
     this.$http.get("http://127.0.0.1:3000/get_courses").subscribe((resp)=>{
             this.courses = resp["course_list"];
             this.listOfOption = this.courses.map(course=>{
@@ -68,7 +68,7 @@ export class CourseListComponent implements OnInit {
     })  
 
 
-    //获取userInfo
+
     var token = localStorage.getItem("token");
     this.$http.get(`http://127.0.0.1:3000/validateToken?token=${token}`).subscribe((resp)=>{
       if(resp["code"]=="1"){
@@ -112,7 +112,6 @@ export class CourseListComponent implements OnInit {
     })
   }
   
-  //edit courselist的modal
 
   validateForm: FormGroup;
   cur_editCourseList = null;
@@ -213,7 +212,7 @@ export class CourseListComponent implements OnInit {
 
     }
     console.log(value);
-    //对数据进行处理
+
     var format_courseList = {};
     if(this.cur_modal_type=="edit")
       format_courseList["id"] = this.cur_editCourseList._id;
@@ -276,7 +275,7 @@ export class CourseListComponent implements OnInit {
 
   listOfOption = [];
   
-  //关于添加Review的代码
+
   current_Review="";
   current_Review_CourseList_id;
   addReview_visible = false;
