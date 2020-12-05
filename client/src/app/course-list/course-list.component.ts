@@ -47,7 +47,7 @@ export class CourseListComponent implements OnInit {
     
 
 
-
+    //获取courses 和 courseLists
     this.$http.get("http://127.0.0.1:3000/get_courses").subscribe((resp)=>{
             this.courses = resp["course_list"];
             this.listOfOption = this.courses.map(course=>{
@@ -68,7 +68,7 @@ export class CourseListComponent implements OnInit {
     })  
 
 
-
+    //获取userInfo
     var token = localStorage.getItem("token");
     this.$http.get(`http://127.0.0.1:3000/validateToken?token=${token}`).subscribe((resp)=>{
       if(resp["code"]=="1"){
@@ -94,7 +94,7 @@ export class CourseListComponent implements OnInit {
   deleteCourseList(courseList_id){
     this.$http.get(`http://127.0.0.1:3000/delete_courseList?courseList_id=${courseList_id}&token=${localStorage.getItem("token")}`).subscribe((resp) => {
       if(resp["code"]=="0"){
-        this.notification.create("success","Delete Successfully","changed");
+        this.notification.create("success","Delete Successfully","er...... do you remember what have changed(((φ(◎ロ◎;)φ)))");
 
         var index = this.courseLists.findIndex(courseList=>courseList._id == courseList_id);
         console.log(index);
@@ -112,6 +112,7 @@ export class CourseListComponent implements OnInit {
     })
   }
   
+  //edit courselist的modal
 
   validateForm: FormGroup;
   cur_editCourseList = null;
@@ -169,7 +170,7 @@ export class CourseListComponent implements OnInit {
         if(resp["code"]=="0"){
           this.CourseList_loading = false;
           this.CourseList_visible = false;
-          this.notification.create("success","Edit Successfully","changed");
+          this.notification.create("success","Edit Successfully","er...... do you remember what have changed(((φ(◎ロ◎;)φ)))");
           
 
         }
@@ -185,7 +186,7 @@ export class CourseListComponent implements OnInit {
         if(resp["code"]=="0"){
           this.CourseList_loading = false;
           this.CourseList_visible = false;
-          this.notification.create("success","Add Successfully","changed");
+          this.notification.create("success","Add Successfully","er...... do you remember what have changed(((φ(◎ロ◎;)φ)))");
         }
         else{
           this.notification.create("error","Error",resp["message"]);
@@ -212,7 +213,7 @@ export class CourseListComponent implements OnInit {
 
     }
     console.log(value);
-
+    //对数据进行处理
     var format_courseList = {};
     if(this.cur_modal_type=="edit")
       format_courseList["id"] = this.cur_editCourseList._id;
@@ -275,17 +276,25 @@ export class CourseListComponent implements OnInit {
 
   listOfOption = [];
   
-
+  //关于添加Review的代码
   current_Review="";
   current_Review_CourseList_id;
   addReview_visible = false;
   addReview_loading = false;
+
+  open_add_review(course){
+    this.current_Review_CourseList_id = course._id;
+    this.addReview_visible = true;
+    
+  }
+
 
   saveReview(){
     this.addReview_loading = true;
     const httpOptions = {
       headers: new HttpHeaders({ 'Content-Type': 'application/json' })
     };
+    console.log(this.current_Review_CourseList_id);
     this.$http.post("http://127.0.0.1:3000/add_review",{review:this.current_Review,course_id:this.current_Review_CourseList_id,authorization:localStorage.getItem("token")},httpOptions).subscribe((resp)=>{
       if(resp["code"]==0){
         this.notification.create("success","Add Review Successfully","good！");

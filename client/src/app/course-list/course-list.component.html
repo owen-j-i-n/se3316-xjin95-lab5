@@ -10,7 +10,7 @@
   
 
   <div *ngIf="userInfo.username">
-    <label nz-checkbox (ngModelChange)= "change_own($event)" [ngModel]="show_my_own" style="font-size: 16px;margin: 0 0 20px 20px;">show my courseList</label>
+    <label nz-checkbox (ngModelChange)= "change_own($event)" [ngModel]="show_my_own" style="font-size: 16px;margin: 0 0 20px 20px;">show my won courseList</label>
   </div>
 
   <nz-table #nestedTable [nzData]="courseLists_show" [nzPageSize]="10" [nzLoading]="!courseLists_load">
@@ -60,7 +60,7 @@
                     end_time:{{course.course_info[0].end_time}}
                 </td>
                 <td>
-                  <a *ngIf="userInfo.username" (click)="(cur_Review_CourseList_id = course._id) && (addReview_visible=true)">Add Review</a>
+                  <a *ngIf="userInfo.username" (click)="open_add_review(course)">Add Review</a>
                 </td>
               </tr>
               
