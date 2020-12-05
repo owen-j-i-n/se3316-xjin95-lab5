@@ -60,9 +60,14 @@ const login = async function (req, res, next) {
           return res.send({ success: true, code: 0, message: 'The account is deactive,Please contack the administrator or check your email!' })
 
         }
-
+        // 生成token
         const token = GenerateToken(userInfo);
-
+        // res.cookie('authorization', token, {
+        //   httpOnly: true,
+          
+        //   maxAge:3600*1000
+        // })
+        // 存储token到redis
         return res.send({ success: true, code: 1, token: token, user: ReturnUserInfo(userInfo) })
       } else {
         return res.send({ success: true, code: 0, message: 'Wrong password' })
@@ -164,11 +169,11 @@ const register = async function (req, res, next) {
           })
         }).catch(error => {
           
-          return res.send({ success: true, code: 0, message: 'fail！error:' + error });
+          return res.send({ success: true, code: 0, message: '注册失败！error:' + error });
         })
       }
     } catch (error) {
-      return res.send({ success: true, code: 0, message: 'fail！error:' + error })
+      return res.send({ success: true, code: 0, message: '注册失败！error:' + error })
     }
   
 }
@@ -295,7 +300,7 @@ const add_review = async function(req,res,next){
   var content = req.body["review"];
   var course_id = req.body["course_id"];
   Course.findByIdAndUpdate(course_id,
-    {$push:{reviews:{"user":{id:req.userInfo._id,name:req.userInfo.username},"hidden":"no","content":content}}},
+    {reviews:{$push:{"user":{id:req.userInfo._id,name:req.userInfo.username},"hidden":"no","content":content}}},
     (err,doc)=>{
       if(err){
         
