@@ -17,5 +17,5 @@ module.exports = function (app) {
   app.get("/hide_review",authController.hide_review)
   app.get("/change_user",authController.change_user_state)
   app.get("/get_users",authMiddleware,authController.get_users)
-  app.post("/register", authController.register)
+  app.post("/register", authController.register)
 }
