@@ -3,6 +3,9 @@ import { interval } from 'rxjs';
 import { NzNotificationService } from 'ng-zorro-antd/notification';
 import { HttpClient, HttpHeaders } from '@angular/common/http'
 
+import { environment } from 'src/environments/environment';
+const { apiUrl } = environment;
+
 
 
 
@@ -133,7 +136,7 @@ export class CoursesComponent implements OnInit {
 
   hidden_Review(review,course_id,state){
     
-    this.$http.get(`http://127.0.0.1:3000/hide_review?review_id=${review._id}&course_id=${course_id}&state=${state}`).subscribe((resp)=>{
+    this.$http.get(`${apiUrl}/hide_review?review_id=${review._id}&course_id=${course_id}&state=${state}`).subscribe((resp)=>{
       if(resp["code"]==0){
         this.notification.create("success","Change Review State Successfully","good！");
         review.hidden = state;
@@ -142,9 +145,7 @@ export class CoursesComponent implements OnInit {
       else{
         this.notification.create("error","Error",resp["message"]);
 
-      }
-      
-        
+      }        
     });
   }
 
@@ -158,6 +159,4 @@ export class CoursesComponent implements OnInit {
     var second = (date.getSeconds()).toString().padStart(2,'0')
     return `${year}-${month}-${day}  ${hour}:${min}:${second}`
   }
-  
-
 }
