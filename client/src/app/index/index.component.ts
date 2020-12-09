@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { NzNotificationService } from 'ng-zorro-antd/notification';
 import { HttpClient, HttpHeaders } from '@angular/common/http'
-
+import { environment } from 'src/environments/environment';
+const { apiUrl } = environment;
 
 
 @Component({
@@ -38,7 +39,7 @@ export class IndexComponent implements OnInit {
     }
     else{
       token = localStorage.getItem("token");
-      this.$http.get(`http://127.0.0.1:3000/validateToken?token=${token}`).subscribe((resp)=>{
+      this.$http.get(`${apiUrl}/validateToken?token=${token}`).subscribe((resp)=>{
         if(resp["code"]=="1"){
           this.user = resp["user"];
           
@@ -48,7 +49,7 @@ export class IndexComponent implements OnInit {
         }
       })
     }
-    this.$http.get("http://127.0.0.1:3000/get_courses").subscribe((resp)=>{
+    this.$http.get(`${apiUrl}/get_courses`).subscribe((resp)=>{
             this.course_list_original = resp["course_list"];
             this.course_list_loaded = true;
       });
