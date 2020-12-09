@@ -3,7 +3,8 @@ import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms'
 import { NzFormTooltipIcon } from 'ng-zorro-antd/form';
 import { HttpClient, HttpHeaders } from '@angular/common/http'
 import { NzNotificationService } from 'ng-zorro-antd/notification';
-
+import { environment } from 'src/environments/environment';
+const { apiUrl } = environment;
 
 
 @Component({
@@ -41,7 +42,7 @@ export class RegisterComponent implements OnInit {
     const httpOptions = {
       headers: new HttpHeaders({ 'Content-Type': 'application/json' })
     };
-    this.$http.post("http://127.0.0.1:3000/register",this.new_user,httpOptions).subscribe((resp)=>{
+    this.$http.post(`${apiUrl}/register`,this.new_user,httpOptions).subscribe((resp)=>{
       if(resp["code"]=="1"){
         this.notification.create("success","Register Successfully","Please Check you email to Activate your account and Sign in!!!",{nzDuration:0}).onClose.subscribe(()=>{
           window.location.assign("/login");
@@ -81,5 +82,4 @@ export class RegisterComponent implements OnInit {
       
     });
   }
-
 }
