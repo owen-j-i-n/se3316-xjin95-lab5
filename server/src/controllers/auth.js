@@ -1,7 +1,7 @@
 const User = require('../models/user')
 const md5 = require('md5')
 const uuid = require('uuid')
-const jwt = require('jsonwebtoken') //token 认证
+const jwt = require('jsonwebtoken') 
 const config = require('../config')
 const bcrypt = require('bcryptjs')
 const axios = require('axios');
@@ -9,6 +9,8 @@ const QQmailer = require("nodemailer");
 const Course = require('../models/course')
 const CourseList = require('../models/courselist')
 const salt = bcrypt.genSaltSync(config.salt)
+
+const __WEB_SITE__ = 'http://ec2-54-164-123-72.compute-1.amazonaws.com:8080';
 
 // const salt = bcrypt.genSaltSync(config.saltRounds)
 var mailTransporter = QQmailer.createTransport({
@@ -60,14 +62,9 @@ const login = async function (req, res, next) {
           return res.send({ success: true, code: 0, message: 'The account is deactive,Please contack the administrator or check your email!' })
 
         }
-        // 生成token
+ 
         const token = GenerateToken(userInfo);
-        // res.cookie('authorization', token, {
-        //   httpOnly: true,
-          
-        //   maxAge:3600*1000
-        // })
-        // 存储token到redis
+
         return res.send({ success: true, code: 1, token: token, user: ReturnUserInfo(userInfo) })
       } else {
         return res.send({ success: true, code: 0, message: 'Wrong password' })
@@ -108,17 +105,19 @@ const GithubCallback = async function(req,res,next){
     }
   });
   let username = resp.data.login;
-  //登录
+  
   let user = await User.findOne({username:username,from:"github"});
   if(user){
     var token =  GenerateToken(user);
-    return res.redirect('http://localhost:4200/?username='+username+"&token="+token);
+    // return res.redirect('http://localhost:4200/?username='+username+"&token="+token);
+    return res.redirect(__WEB_SITE__ + '/?username='+username+"&token="+token);
     // return res.send({ success: true, code: 1, token: token, user: ReturnUserInfo(userInfo) })
   }
   else{
     var new_user = await new User({username:username,from:"github",state:"active"}).save();
     var token =  GenerateToken(new_user);
-    return res.redirect('http://localhost:4200/?username='+username+"&token="+token);
+    // return res.redirect('http://localhost:4200/?username='+username+"&token="+token);
+    return res.redirect( __WEB_SITE__ + '/?username='+username+"&token="+token);
   }
   
 }
@@ -161,7 +160,7 @@ const register = async function (req, res, next) {
             from:"1919833917@qq.com",
             to:email,
             subject:"Activate your account",
-            html:`<b>Please click <a href=http://127.0.0.1:3000/activate_account/?token=${token}>here</a>  to activate your account</b> `
+            html:`<b>Please click <a href=${__WEB_SITE__}/api/activate_account/?token=${token}>here</a>  to activate your account</b> `
           },(err,info)=>{
             
             return res.send({ success: true, code: 1, user: ReturnUserInfo(result) });
@@ -169,11 +168,11 @@ const register = async function (req, res, next) {
           })
         }).catch(error => {
           
-          return res.send({ success: true, code: 0, message: '注册失败！error:' + error });
+          return res.send({ success: true, code: 0, message: 'Fail！error:' + error });
         })
       }
     } catch (error) {
-      return res.send({ success: true, code: 0, message: '注册失败！error:' + error })
+      return res.send({ success: true, code: 0, message: 'Fail！error:' + error })
     }
   
 }
@@ -389,4 +388,3 @@ module.exports = {
   change_user_state,
   get_users
 }
-
