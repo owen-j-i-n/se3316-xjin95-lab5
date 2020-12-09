@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { HttpClient, HttpHeaders } from '@angular/common/http'
 import { NzNotificationService } from 'ng-zorro-antd/notification';
+import { environment } from 'src/environments/environment';
+const { apiUrl } = environment;
 
 @Component({
   selector: 'app-login',
@@ -27,7 +29,7 @@ export class LoginComponent implements OnInit {
       headers: new HttpHeaders({ 'Content-Type': 'application/json' })
     };
     console.log(this.username, this.password);
-    this.$http.post("http://127.0.0.1:3000/login", { email: this.email, password: this.password ,from:"web"}, httpOptions).subscribe(
+    this.$http.post(`${apiUrl}/login`, { email: this.email, password: this.password ,from:"web"}, httpOptions).subscribe(
       response => {
         console.log(response);
         //save token
@@ -46,7 +48,7 @@ export class LoginComponent implements OnInit {
 
   }
   loginByGithub() {
-    this.$http.get("http://127.0.0.1:3000/loginByGithub").subscribe((res) => {
+    this.$http.get(`${apiUrl}/loginByGithub`).subscribe((res) => {
       window.open(res["path"],"_self");
       
       
